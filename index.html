@@ -7,16 +7,69 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js"></script>
 </head>
 <body>
-  <div class="container">
+  <!-- Login/Register Container -->
+  <div id="auth-container" class="container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Expense Tracker</h1>
+        <p>Manage your expenses efficiently</p>
+      </div>
+      <div class="auth-tabs">
+        <div class="auth-tabs-list">
+          <button class="auth-tab active" data-tab="login">Login</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+        <div class="auth-tab-content active" id="login-tab">
+          <form id="login-form" class="auth-form">
+            <div class="form-group">
+              <label for="login-username">Username or Email</label>
+              <input type="text" id="login-username" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" required>
+            </div>
+            <div id="login-error" class="error-message"></div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+        </div>
+        <div class="auth-tab-content" id="register-tab">
+          <form id="register-form" class="auth-form">
+            <div class="form-group">
+              <label for="register-username">Username</label>
+              <input type="text" id="register-username" required>
+            </div>
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <input type="password" id="register-password" required>
+            </div>
+            <div id="register-error" class="error-message"></div>
+            <button type="submit" class="btn btn-primary">Register</button>
+          </form>
+        </div>
+      </div>
+      <div class="auth-footer">
+        &copy; 2025 Expense Tracker App
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Container (Hidden initially) -->
+  <div id="app-container" class="container hidden">
     <header>
       <h1>Expense Tracker</h1>
       <div class="user-section">
         <div id="user-info">
           <span id="username">Guest</span>
-          <button id="login-btn">Login</button>
-          <button id="logout-btn" class="hidden">Logout</button>
+          <button id="logout-btn" class="btn btn-outline">Logout</button>
         </div>
       </div>
     </header>
@@ -39,131 +92,267 @@
         </div>
       </section>
 
-      <section class="transaction-section">
-        <div class="add-transaction">
-          <h3>Add New Transaction</h3>
-          <form id="form">
-            <div class="form-control">
-              <label for="text">Description</label>
-              <input type="text" id="text" placeholder="Enter description..." required>
-            </div>
-            <div class="form-control">
-              <label for="amount">Amount</label>
-              <input type="number" id="amount" placeholder="Enter amount..." step="0.01" required>
-              <small>Negative - expense, Positive - income</small>
-            </div>
-            <div class="form-control">
-              <label for="category">Category</label>
-              <select id="category" required>
-                <option value="">Select category...</option>
-                <option value="Food">Food</option>
-                <option value="Housing">Housing</option>
-                <option value="Transportation">Transportation</option>
-                <option value="Utilities">Utilities</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Salary">Salary</option>
-                <option value="Other Income">Other Income</option>
-              </select>
-            </div>
-            <button class="btn" type="submit">Add Transaction</button>
-          </form>
+      <div class="main-tabs">
+        <div class="tabs-list">
+          <button class="tab active" data-tab="transactions">Transactions</button>
+          <button class="tab" data-tab="analysis">Analysis</button>
+          <button class="tab" data-tab="groups">Group Expenses</button>
         </div>
 
-        <div class="history">
-          <h3>Transaction History</h3>
-          <div class="filters">
-            <div class="filter-control">
-              <label for="filter-type">Filter by Type:</label>
-              <select id="filter-type">
-                <option value="all">All</option>
-                <option value="income">Income Only</option>
-                <option value="expense">Expenses Only</option>
-              </select>
-            </div>
-            <div class="filter-control">
-              <label for="filter-category">Filter by Category:</label>
-              <select id="filter-category">
-                <option value="all">All Categories</option>
-                <option value="Food">Food</option>
-                <option value="Housing">Housing</option>
-                <option value="Transportation">Transportation</option>
-                <option value="Utilities">Utilities</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Salary">Salary</option>
-                <option value="Other Income">Other Income</option>
-              </select>
-            </div>
-          </div>
-          <ul id="list" class="list"></ul>
-        </div>
-      </section>
+        <!-- Transactions Tab -->
+        <div class="tab-content active" id="transactions-tab">
+          <div class="transaction-grid">
+            <section class="transaction-section">
+              <div class="add-transaction">
+                <h3>Add New Transaction</h3>
+                <form id="transaction-form">
+                  <div class="form-control">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" placeholder="Enter description..." required>
+                  </div>
+                  <div class="form-control">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" placeholder="Enter amount..." step="0.01" required>
+                    <small>Negative - expense, Positive - income</small>
+                  </div>
+                  <div class="form-control">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                      <option value="">Select category...</option>
+                      <option value="Food">Food</option>
+                      <option value="Housing">Housing</option>
+                      <option value="Transportation">Transportation</option>
+                      <option value="Utilities">Utilities</option>
+                      <option value="Entertainment">Entertainment</option>
+                      <option value="Shopping">Shopping</option>
+                      <option value="Healthcare">Healthcare</option>
+                      <option value="Salary">Salary</option>
+                      <option value="Other Income">Other Income</option>
+                    </select>
+                  </div>
+                  <div class="form-control">
+                    <label for="transaction-date">Date</label>
+                    <input type="date" id="transaction-date" required>
+                  </div>
+                  <button class="btn" type="submit">Add Transaction</button>
+                </form>
+              </div>
+            </section>
 
-      <section class="charts-section">
-        <h3>Spending Analysis</h3>
-        <div class="chart-container">
-          <div class="chart">
-            <h4>Spending by Category</h4>
-            <canvas id="category-chart"></canvas>
-          </div>
-          <div class="chart">
-            <h4>Income vs Expenses</h4>
-            <canvas id="income-expense-chart"></canvas>
+            <section class="history-section">
+              <div class="history">
+                <h3>Transaction History</h3>
+                <div class="filters">
+                  <div class="filter-control">
+                    <label for="filter-type">Filter by Type:</label>
+                    <select id="filter-type">
+                      <option value="all">All</option>
+                      <option value="income">Income Only</option>
+                      <option value="expense">Expenses Only</option>
+                    </select>
+                  </div>
+                  <div class="filter-control">
+                    <label for="filter-category">Filter by Category:</label>
+                    <select id="filter-category">
+                      <option value="all">All Categories</option>
+                      <option value="Food">Food</option>
+                      <option value="Housing">Housing</option>
+                      <option value="Transportation">Transportation</option>
+                      <option value="Utilities">Utilities</option>
+                      <option value="Entertainment">Entertainment</option>
+                      <option value="Shopping">Shopping</option>
+                      <option value="Healthcare">Healthcare</option>
+                      <option value="Salary">Salary</option>
+                      <option value="Other Income">Other Income</option>
+                    </select>
+                  </div>
+                  <div class="filter-control">
+                    <label for="date-range">Date Range:</label>
+                    <div class="date-range-inputs">
+                      <input type="date" id="date-from" placeholder="From">
+                      <input type="date" id="date-to" placeholder="To">
+                      <button id="clear-date-filter" class="btn btn-small">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <ul id="transaction-list" class="list"></ul>
+              </div>
+            </section>
           </div>
         </div>
-      </section>
+
+        <!-- Analysis Tab -->
+        <div class="tab-content" id="analysis-tab">
+          <section class="charts-section">
+            <div class="chart-controls">
+              <div class="filter-control">
+                <label for="time-range">Time Range:</label>
+                <select id="time-range">
+                  <option value="month">This Month</option>
+                  <option value="quarter">Last 3 Months</option>
+                  <option value="year">Last 12 Months</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="chart">
+                <h4>Spending by Category</h4>
+                <canvas id="category-chart"></canvas>
+              </div>
+              <div class="chart">
+                <h4>Income vs Expenses</h4>
+                <canvas id="income-expense-chart"></canvas>
+              </div>
+              <div class="chart full-width">
+                <h4>Daily Spending Trend</h4>
+                <canvas id="daily-chart"></canvas>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Groups Tab -->
+        <div class="tab-content" id="groups-tab">
+          <section class="groups-section">
+            <div class="groups-header">
+              <h2>Group Expenses</h2>
+              <button id="create-group-btn" class="btn">
+                <i class="fas fa-plus"></i> Create Group
+              </button>
+            </div>
+            
+            <div id="no-groups" class="no-data-message">
+              <i class="fas fa-users"></i>
+              <h3>No Groups Yet</h3>
+              <p>Create a group to start tracking shared expenses with others.</p>
+              <button id="create-first-group-btn" class="btn">
+                <i class="fas fa-plus"></i> Create Your First Group
+              </button>
+            </div>
+
+            <div id="groups-content" class="groups-content hidden">
+              <div class="groups-grid">
+                <div class="groups-list">
+                  <h3>Your Groups</h3>
+                  <ul id="groups-list-items"></ul>
+                </div>
+                
+                <div class="group-details">
+                  <div class="group-header">
+                    <h3 id="group-name">Select a Group</h3>
+                    <p id="group-created-by"></p>
+                  </div>
+                  
+                  <div class="group-tabs">
+                    <div class="tabs-list">
+                      <button class="group-tab active" data-tab="details">Group Details</button>
+                      <button class="group-tab" data-tab="expenses">Expenses</button>
+                      <button class="group-tab" data-tab="balances">Balances</button>
+                    </div>
+                    
+                    <div class="group-tab-content active" id="details-tab">
+                      <div class="members-section">
+                        <h4>Members</h4>
+                        <ul id="members-list" class="members-list"></ul>
+                        
+                        <div class="add-member">
+                          <h4>Add Member</h4>
+                          <div class="add-member-form">
+                            <input type="text" id="new-member" placeholder="Enter username">
+                            <button id="add-member-btn" class="btn">
+                              <i class="fas fa-user-plus"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="group-tab-content" id="expenses-tab">
+                      <div class="group-expenses">
+                        <div class="expenses-header">
+                          <h4>Expenses</h4>
+                          <button id="add-expense-btn" class="btn">
+                            <i class="fas fa-plus"></i> Add Expense
+                          </button>
+                        </div>
+                        
+                        <ul id="group-expenses-list" class="expenses-list"></ul>
+                        
+                        <div id="no-expenses" class="no-data-message">
+                          <p>No expenses added yet</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="group-tab-content" id="balances-tab">
+                      <div class="balances-section">
+                        <h4>Current Balances</h4>
+                        <ul id="balances-list" class="balances-list"></ul>
+                        
+                        <h4>Settlements</h4>
+                        <ul id="settlements-list" class="settlements-list"></ul>
+                        
+                        <div id="no-balances" class="no-data-message">
+                          <p>No balances to show</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
     </main>
 
-    <div id="login-modal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Login</h2>
-        <form id="login-form">
-          <div class="form-control">
-            <label for="login-username">Email or Username</label>
-            <input type="text" id="login-username" required>
-          </div>
-          <div class="form-control">
-            <label for="login-password">Password</label>
-            <input type="password" id="login-password" required>
-          </div>
-          <button class="btn" type="submit">Login</button>
-          <p>Don't have an account? <a href="#" id="show-register">Register here</a></p>
-        </form>
-      </div>
-    </div>
+    <footer>
+      <p>&copy; 2025 Expense Tracker App</p>
+    </footer>
+  </div>
 
-    <div id="register-modal" class="modal">
-      <div class="modal-content">
-        <span class="close" id="register-close">&times;</span>
-        <h2>Register</h2>
-        <form id="register-form">
-          <div class="form-control">
-            <label for="register-username">Username</label>
-            <input type="text" id="register-username" required>
-          </div>
-          <div class="form-control">
-            <label for="register-email">Email</label>
-            <input type="email" id="register-email" required>
-          </div>
-          <div class="form-control">
-            <label for="register-password">Password</label>
-            <input type="password" id="register-password" required>
-          </div>
-          <button class="btn" type="submit">Register</button>
-        </form>
-      </div>
+  <!-- Modals -->
+  <div id="create-group-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Create New Group</h2>
+      <p>Create a new group to track shared expenses with friends, family, or roommates.</p>
+      <form id="create-group-form">
+        <div class="form-control">
+          <label for="group-name-input">Group Name</label>
+          <input type="text" id="group-name-input" placeholder="Enter group name" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Group</button>
+      </form>
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2025 Expense Tracker App</p>
-  </footer>
+  <div id="add-expense-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add New Expense</h2>
+      <p>Add a new expense to the group. The amount will be split equally among all members.</p>
+      <form id="add-expense-form">
+        <div class="form-control">
+          <label for="expense-description">Description</label>
+          <input type="text" id="expense-description" placeholder="What was this expense for?" required>
+        </div>
+        <div class="form-control">
+          <label for="expense-amount">Amount</label>
+          <input type="number" id="expense-amount" step="0.01" placeholder="How much was spent?" required>
+        </div>
+        <div class="form-control">
+          <label for="expense-paid-by">Paid By</label>
+          <input type="text" id="expense-paid-by" placeholder="Who paid for this?" required>
+          <small>Enter the username of the group member who paid</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Expense</button>
+      </form>
+    </div>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
