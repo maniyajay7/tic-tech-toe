@@ -215,22 +215,57 @@ input:focus, select:focus {
   border-color: var(--primary-color);
 }
 
-.btn {
-  width: 100%;
-  padding: 12px;
-  background-color: var(--primary-color);
-  color: var(--dark-color);
+.delete-btn {
+  background-color: var(--expense-color);
+
   border: 0;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 10px 0 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  padding: 2px 5px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-100%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .btn:hover {
   background-color: #e9b73f;
+}
+
+/* Cancel Button Styling */
+.btn-cancel {
+  background-color: transparent;
+  color: var(--expense-color); /* Matches the red color */
+  border: 1px solid var(--expense-color);
+  border-radius: 12px; /* Slightly rounded corners */
+  padding: 2px 8px; /* Smaller padding for a compact size */
+  font-size: 0.75rem; /* Smaller font size */
+  font-weight: 500; /* Medium weight for better readability */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* Space between text and icon */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.btn-cancel:hover {
+  background-color: var(--expense-color); /* Red background on hover */
+  color: var(--light-color); /* White text on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.btn-cancel:active {
+  transform: scale(1); /* Reset zoom on click */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow on click */
+}
+
+.btn-cancel i {
+  font-size: 0.7rem; /* Smaller icon size */
 }
 
 .filters {
@@ -416,6 +451,17 @@ footer {
   margin-top: 15px;
   font-size: 0.8rem;
   opacity: 0.7;
+}
+
+/* Profile Modal Styling */
+.profile-details p {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: var(--light-color);
+}
+
+.profile-details strong {
+  color: var(--primary-color);
 }
 
 /* Auth styles */
