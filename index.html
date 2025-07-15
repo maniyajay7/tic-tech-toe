@@ -1,358 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Expense Tracker</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap | Trade Your Skills</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <!-- Login/Register Container -->
-  <div id="auth-container" class="container">
-    <div class="auth-card">
-      <div class="auth-header">
-        <h1>Expense Tracker</h1>
-        <p>Manage your expenses efficiently</p>
-      </div>
-      <div class="auth-tabs">
-        <div class="auth-tabs-list">
-          <button class="auth-tab active" data-tab="login">Login</button>
-          <button class="auth-tab" data-tab="register">Register</button>
+    <!-- Floating Skills Animation -->
+    <div class="floating-skills-container" id="floating-skills">
+        <div class="floating-skill" data-skill="JavaScript">
+            <div class="skill-icon">
+                <i class="fab fa-js-square"></i>
+            </div>
+            <span>JavaScript</span>
         </div>
-        <div class="auth-tab-content active" id="login-tab">
-          <form id="login-form" class="auth-form">
-            <div class="form-group">
-              <label for="login-username">Username or Email</label>
-              <input type="text" id="login-username" required>
+        <div class="floating-skill" data-skill="Python">
+            <div class="skill-icon">
+                <i class="fab fa-python"></i>
             </div>
-            <div class="form-group">
-              <label for="login-password">Password</label>
-              <input type="password" id="login-password" required>
-            </div>
-            <div id="login-error" class="error-message"></div>
-            <button type="submit" class="btn btn-primary">Login</button>
-          </form>
+            <span>Python</span>
         </div>
-        <div class="auth-tab-content" id="register-tab">
-          <form id="register-form" class="auth-form">
-            <div class="form-group">
-              <label for="register-username">Username</label>
-              <input type="text" id="register-username" required>
+        <div class="floating-skill" data-skill="Design">
+            <div class="skill-icon">
+                <i class="fas fa-palette"></i>
             </div>
-            <div class="form-group">
-              <label for="register-email">Email</label>
-              <input type="email" id="register-email" required>
-            </div>
-            <div class="form-group">
-              <label for="register-password">Password</label>
-              <input type="password" id="register-password" required>
-            </div>
-            <div id="register-error" class="error-message"></div>
-            <button type="submit" class="btn btn-primary">Register</button>
-          </form>
+            <span>Design</span>
         </div>
-      </div>
-      <div class="auth-footer">
-        &copy; 2025 Expense Tracker App
-      </div>
+        <div class="floating-skill" data-skill="Music">
+            <div class="skill-icon">
+                <i class="fas fa-music"></i>
+            </div>
+            <span>Music</span>
+        </div>
+        <div class="floating-skill" data-skill="Photography">
+            <div class="skill-icon">
+                <i class="fas fa-camera"></i>
+            </div>
+            <span>Photography</span>
+        </div>
+        <div class="floating-skill" data-skill="Writing">
+            <div class="skill-icon">
+                <i class="fas fa-pen"></i>
+            </div>
+            <span>Writing</span>
+        </div>
     </div>
-  </div>
 
-  <!-- Main App Container (Hidden initially) -->
-  <div id="app-container" class="container hidden">
-    <header>
-      <h1>Expense Tracker</h1>
-      <div class="user-section">
-        <div id="user-info">
-          <span id="username">Guest</span>
-          <button id="logout-btn" class="btn btn-outline">Logout</button>
-        </div>
-      </div>
-    </header>
-
-    <main>
-      <section class="balance-section">
-        <div class="balance-card">
-          <h2>Your Balance</h2>
-          <h1 id="balance">$0.00</h1>
-          <div class="income-expense">
-            <div>
-              <h4>Income</h4>
-              <p id="money-plus" class="money plus">+$0.00</p>
+    <div class="app-container">
+        <!-- Header/Navigation -->
+        <header class="app-header">
+            <div class="logo-container">
+                <h1 class="logo">SkillSwap</h1>
+                <p class="tagline">Trade skills, grow together</p>
             </div>
-            <div>
-              <h4>Expense</h4>
-              <p id="money-minus" class="money minus">-$0.00</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="main-tabs">
-        <div class="tabs-list">
-          <button class="tab active" data-tab="transactions">Transactions</button>
-          <button class="tab" data-tab="analysis">Analysis</button>
-          <button class="tab" data-tab="groups">Group Expenses</button>
-        </div>
-
-        <!-- Transactions Tab -->
-        <div class="tab-content active" id="transactions-tab">
-          <div class="transaction-grid">
-            <section class="transaction-section">
-              <div class="add-transaction">
-                <h3>Add New Transaction</h3>
-                <form id="transaction-form">
-                  <div class="form-control">
-                    <label for="description">Description</label>
-                    <input type="text" id="description" placeholder="Enter description..." required>
-                  </div>
-                  <div class="form-control">
-                    <label for="amount">Amount</label>
-                    <input type="number" id="amount" placeholder="Enter amount..." step="0.01" required>
-                    <small>Negative - expense, Positive - income</small>
-                  </div>
-                  <div class="form-control">
-                    <label for="category">Category</label>
-                    <select id="category" required>
-                      <option value="">Select category...</option>
-                      <option value="Food">Food</option>
-                      <option value="Housing">Housing</option>
-                      <option value="Transportation">Transportation</option>
-                      <option value="Utilities">Utilities</option>
-                      <option value="Entertainment">Entertainment</option>
-                      <option value="Shopping">Shopping</option>
-                      <option value="Healthcare">Healthcare</option>
-                      <option value="Salary">Salary</option>
-                      <option value="Other Income">Other Income</option>
-                    </select>
-                  </div>
-                  <div class="form-control">
-                    <label for="transaction-date">Date</label>
-                    <input type="date" id="transaction-date" required>
-                  </div>
-                  <button class="btn" type="submit">Add Transaction</button>
-                </form>
-              </div>
-            </section>
-
-            <section class="history-section">
-              <div class="history">
-                <h3>Transaction History</h3>
-                <div class="filters">
-                  <div class="filter-control">
-                    <label for="filter-type">Filter by Type:</label>
-                    <select id="filter-type">
-                      <option value="all">All</option>
-                      <option value="income">Income Only</option>
-                      <option value="expense">Expenses Only</option>
-                    </select>
-                  </div>
-                  <div class="filter-control">
-                    <label for="filter-category">Filter by Category:</label>
-                    <select id="filter-category">
-                      <option value="all">All Categories</option>
-                      <option value="Food">Food</option>
-                      <option value="Housing">Housing</option>
-                      <option value="Transportation">Transportation</option>
-                      <option value="Utilities">Utilities</option>
-                      <option value="Entertainment">Entertainment</option>
-                      <option value="Shopping">Shopping</option>
-                      <option value="Healthcare">Healthcare</option>
-                      <option value="Salary">Salary</option>
-                      <option value="Other Income">Other Income</option>
-                    </select>
-                  </div>
-                  <div class="filter-control">
-                    <label for="date-range">Date Range:</label>
-                    <div class="date-range-inputs">
-                      <input type="date" id="date-from" placeholder="From">
-                      <input type="date" id="date-to" placeholder="To">
-                      <button id="clear-date-filter" class="btn btn-small">
-                        <i class="fas fa-times"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <ul id="transaction-list" class="list"></ul>
-              </div>
-            </section>
-          </div>
-        </div>
-
-        <!-- Analysis Tab -->
-        <div class="tab-content" id="analysis-tab">
-          <section class="charts-section">
-            <div class="chart-controls">
-              <div class="filter-control">
-                <label for="time-range">Time Range:</label>
-                <select id="time-range">
-                  <option value="month">This Month</option>
-                  <option value="quarter">Last 3 Months</option>
-                  <option value="year">Last 12 Months</option>
-                </select>
-              </div>
-            </div>
-            <div class="chart-container">
-              <div class="chart">
-                <h4>Spending by Category</h4>
-                <canvas id="category-chart"></canvas>
-              </div>
-              <div class="chart">
-                <h4>Income vs Expenses</h4>
-                <canvas id="income-expense-chart"></canvas>
-              </div>
-              <div class="chart full-width">
-                <h4>Daily Spending Trend</h4>
-                <canvas id="daily-chart"></canvas>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <!-- Groups Tab -->
-        <div class="tab-content" id="groups-tab">
-          <section class="groups-section">
-            <div class="groups-header">
-              <h2>Group Expenses</h2>
-              <button id="create-group-btn" class="btn">
-                <i class="fas fa-plus"></i> Create Group
-              </button>
-            </div>
-            
-            <div id="no-groups" class="no-data-message">
-              <i class="fas fa-users"></i>
-              <h3>No Groups Yet</h3>
-              <p>Create a group to start tracking shared expenses with others.</p>
-              <button id="create-first-group-btn" class="btn">
-                <i class="fas fa-plus"></i> Create Your First Group
-              </button>
-            </div>
-
-            <div id="groups-content" class="groups-content hidden">
-              <div class="groups-grid">
-                <div class="groups-list">
-                  <h3>Your Groups</h3>
-                  <ul id="groups-list-items"></ul>
-                </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="#" class="nav-link active" id="nav-home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" class="nav-link" id="nav-browse"><i class="fas fa-search"></i> Browse</a></li>
+                    <li><a href="#" class="nav-link" id="nav-swaps"><i class="fas fa-exchange-alt"></i> My Swaps</a></li>
+                    <li><a href="#" class="nav-link" id="nav-profile"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="#" class="nav-link" id="nav-admin" style="display:none;"><i class="fas fa-shield-alt"></i> Admin</a></li>
+                </ul>
+            </nav>
+            <div class="user-controls">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle-btn" class="btn btn-outline theme-toggle" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
                 
-                <div class="group-details">
-                  <div class="group-header">
-                    <h3 id="group-name">Select a Group</h3>
-                    <p id="group-created-by"></p>
-                  </div>
-                  
-                  <div class="group-tabs">
-                    <div class="tabs-list">
-                      <button class="group-tab active" data-tab="details">Group Details</button>
-                      <button class="group-tab" data-tab="expenses">Expenses</button>
-                      <button class="group-tab" data-tab="balances">Balances</button>
-                    </div>
-                    
-                    <div class="group-tab-content active" id="details-tab">
-                      <div class="members-section">
-                        <h4>Members</h4>
-                        <ul id="members-list" class="members-list"></ul>
-                        
-                        <div class="add-member">
-                          <h4>Add Member</h4>
-                          <div class="add-member-form">
-                            <input type="text" id="new-member" placeholder="Enter username">
-                            <button id="add-member-btn" class="btn">
-                              <i class="fas fa-user-plus"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="group-tab-content" id="expenses-tab">
-                      <div class="group-expenses">
-                        <div class="expenses-header">
-                          <h4>Expenses</h4>
-                          <button id="add-expense-btn" class="btn">
-                            <i class="fas fa-plus"></i> Add Expense
-                          </button>
-                        </div>
-                        
-                        <ul id="group-expenses-list" class="expenses-list"></ul>
-                        
-                        <div id="no-expenses" class="no-data-message">
-                          <p>No expenses added yet</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="group-tab-content" id="balances-tab">
-                      <div class="balances-section">
-                        <h4>Current Balances</h4>
-                        <ul id="balances-list" class="balances-list"></ul>
-                        
-                        <h4>Settlements</h4>
-                        <ul id="settlements-list" class="settlements-list"></ul>
-                        
-                        <div id="no-balances" class="no-data-message">
-                          <p>No balances to show</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <!-- Login/Signup Buttons (shown when not logged in) -->
+                <button id="login-btn" class="btn btn-outline">Login</button>
+                <button id="signup-btn" class="btn btn-primary">Sign Up</button>
+                
+                <!-- User Profile and Logout (shown when logged in) -->
+                <div id="user-profile-btn" style="display:none;" class="user-profile-container">
+                    <img src="/placeholder.svg" alt="Profile" class="profile-pic-small">
                 </div>
-              </div>
+                <button id="logout-btn" style="display:none;" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
-          </section>
-        </div>
-      </div>
-    </main>
+        </header>
 
-    <footer>
-      <p>&copy; 2025 Expense Tracker App</p>
-    </footer>
-  </div>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Home View -->
+            <section id="home-view" class="content-view">
+                <div class="hero-section">
+                    <div class="hero-text">
+                        <h2>Trade Your Skills, Grow Together</h2>
+                        <p>Connect with people who have the skills you need and offer what you know in return.</p>
+                        <button class="btn btn-primary btn-large" id="get-started-btn">Get Started</button>
+                    </div>
+                    <div class="hero-image">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="People collaborating">
+                    </div>
+                </div>
 
-  <!-- Modals -->
-  <div id="create-group-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Create New Group</h2>
-      <p>Create a new group to track shared expenses with friends, family, or roommates.</p>
-      <form id="create-group-form">
-        <div class="form-control">
-          <label for="group-name-input">Group Name</label>
-          <input type="text" id="group-name-input" placeholder="Enter group name" required>
+                <div class="featured-skills">
+                    <h3>Popular Skills on SkillSwap</h3>
+                    <div class="skills-grid" id="popular-skills">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <div class="testimonials">
+                    <h3>What Our Users Say</h3>
+                    <div class="testimonial-carousel">
+                        <div class="testimonial">
+                            <p>"I learned graphic design in exchange for teaching Spanish. Amazing platform!"</p>
+                            <div class="testimonial-author">- Maria, Barcelona</div>
+                        </div>
+                        <div class="testimonial">
+                            <p>"Found someone to help me with coding while I taught them photography."</p>
+                            <div class="testimonial-author">- James, London</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Browse View -->
+            <section id="browse-view" class="content-view" style="display:none;">
+                <div class="search-filters">
+                    <div class="search-bar">
+                        <div class="search-input-container">
+                            <input type="text" id="skill-search" placeholder="Search for skills or users...">
+                            <div class="search-dropdown" id="search-dropdown">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="filter-options">
+                        <select id="location-filter">
+                            <option value="">Any Location</option>
+                            <option value="remote">Remote Only</option>
+                            <!-- More options added dynamically -->
+                        </select>
+                        <select id="availability-filter">
+                            <option value="">Any Availability</option>
+                            <option value="weekends">Weekends</option>
+                            <option value="evenings">Evenings</option>
+                            <option value="weekdays">Weekdays</option>
+                        </select>
+                        <button class="btn btn-outline" id="reset-filters">Reset Filters</button>
+                    </div>
+                </div>
+
+                <div class="results-container">
+                    <div class="results-count">
+                        <span id="results-count">0</span> results found
+                    </div>
+                    <div class="results-grid" id="search-results">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <div class="pagination">
+                        <button class="btn btn-outline" id="prev-page" disabled>Previous</button>
+                        <span id="page-info">Page 1 of 1</span>
+                        <button class="btn btn-outline" id="next-page" disabled>Next</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Swaps View -->
+            <section id="swaps-view" class="content-view" style="display:none;">
+                <div class="swaps-tabs">
+                    <button class="tab-btn active" data-tab="pending">Pending Requests</button>
+                    <button class="tab-btn" data-tab="accepted">Accepted Swaps</button>
+                    <button class="tab-btn" data-tab="completed">Completed Swaps</button>
+                </div>
+
+                <div class="tab-content active" id="pending-tab">
+                    <div class="swaps-list" id="pending-swaps">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="accepted-tab">
+                    <div class="swaps-list" id="accepted-swaps">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="completed-tab">
+                    <div class="swaps-list" id="completed-swaps">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile View -->
+            <section id="profile-view" class="content-view" style="display:none;">
+                <div class="profile-header">
+                    <div class="profile-pic-container">
+                        <img src="/placeholder.svg" alt="Profile Picture" class="profile-pic-large" id="profile-pic">
+                        <button class="btn btn-outline" id="change-photo-btn">Change Photo</button>
+                        <input type="file" id="photo-upload" accept="image/*" style="display:none;">
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profile-name">Your Profile</h2>
+                        <div class="profile-location" id="profile-location">
+                            <i class="fas fa-map-marker-alt"></i> <span id="location-text">Not specified</span>
+                        </div>
+                        <div class="profile-status">
+                            <span class="status-badge" id="profile-status">Private</span>
+                            <button class="btn btn-outline btn-small" id="toggle-status-btn">Make Public</button>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary btn-small" id="edit-profile-btn">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-sections">
+                    <div class="profile-section">
+                        <h3><i class="fas fa-tools"></i> Skills I Offer</h3>
+                        <div class="skills-list" id="offered-skills">
+                            <!-- Dynamically populated -->
+                        </div>
+                        <div class="add-skill">
+                            <input type="text" id="new-offered-skill" placeholder="Add a skill you offer">
+                            <button class="btn btn-primary btn-small" id="add-offered-skill">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3><i class="fas fa-lightbulb"></i> Skills I Want</h3>
+                        <div class="skills-list" id="wanted-skills">
+                            <!-- Dynamically populated -->
+                        </div>
+                        <div class="add-skill">
+                            <input type="text" id="new-wanted-skill" placeholder="Add a skill you want">
+                            <button class="btn btn-primary btn-small" id="add-wanted-skill">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Availability</h3>
+                        <div class="availability-options">
+                            <label class="checkbox-container">Weekends
+                                <input type="checkbox" id="weekends-availability">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container">Evenings
+                                <input type="checkbox" id="evenings-availability">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container">Weekdays
+                                <input type="checkbox" id="weekdays-availability">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3><i class="fas fa-star"></i> My Ratings</h3>
+                        <div class="ratings-container" id="user-ratings">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin View -->
+            <section id="admin-view" class="content-view" style="display:none;">
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-tab="admin-users">User Management</button>
+                    <button class="tab-btn" data-tab="admin-content">Content Moderation</button>
+                    <button class="tab-btn" data-tab="admin-messages">Platform Messages</button>
+                    <button class="tab-btn" data-tab="admin-reports">Reports</button>
+                </div>
+
+                <div class="tab-content active" id="admin-users-tab">
+                    <div class="admin-controls">
+                        <input type="text" id="admin-user-search" placeholder="Search users...">
+                        <button class="btn btn-primary" id="admin-search-btn">Search</button>
+                        <button class="btn btn-danger" id="export-users-btn">Export User Data</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-table">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="admin-content-tab">
+                    <h3>Pending Skill Approvals</h3>
+                    <div class="pending-skills-list" id="pending-skills-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="admin-messages-tab">
+                    <div class="message-composer">
+                        <h3>Send Platform Message</h3>
+                        <input type="text" id="message-subject" placeholder="Message subject">
+                        <textarea id="message-content" placeholder="Type your message here..."></textarea>
+                        <div class="message-options">
+                            <label class="checkbox-container">Send as urgent
+                                <input type="checkbox" id="urgent-message">
+                                <span class="checkmark"></span>
+                            </label>
+                            <button class="btn btn-primary" id="send-message-btn">Send to All Users</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="admin-reports-tab">
+                    <div class="report-filters">
+                        <select id="report-type">
+                            <option value="swaps">Swap Statistics</option>
+                            <option value="users">User Activity</option>
+                            <option value="feedback">Feedback Logs</option>
+                        </select>
+                        <input type="date" id="report-start-date">
+                        <input type="date" id="report-end-date">
+                        <button class="btn btn-primary" id="generate-report-btn">Generate Report</button>
+                        <button class="btn btn-outline" id="download-report-btn">Download CSV</button>
+                    </div>
+                    <div class="report-results" id="report-results">
+                        <!-- Report data will be displayed here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Authentication Modals -->
+        <div class="modal" id="login-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Login to SkillSwap</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div class="auth-links">
+                    <a href="#" id="forgot-password-link">Forgot username/password?</a>
+                    <p>Don't have an account? <a href="#" id="show-signup-link">Sign up</a></p>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Create Group</button>
-      </form>
+
+        <div class="modal" id="signup-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h2>Create Your Account</h2>
+                        <p>Join our community to start swapping skills</p>
+                    </div>
+                    
+                    <form id="signup-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" placeholder="Enter your full name" required>
+                            <div id="name-error" class="error-message">Please enter your name</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-email">Email Address</label>
+                            <input type="email" id="signup-email" placeholder="Enter your email" required>
+                            <div id="email-error" class="error-message">Please enter a valid email</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" placeholder="Create a password" required>
+                            <div class="password-strength">
+                                <div id="strength-indicator" class="strength-indicator"></div>
+                            </div>
+                            <div id="strength-text" class="strength-text"></div>
+                            <div id="password-error" class="error-message"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-confirm-password">Confirm Password</label>
+                            <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required>
+                            <div id="confirm-password-error" class="error-message">Passwords don't match</div>
+                        </div>
+                        
+                        <button type="submit" class="auth-btn">Sign Up</button>
+                    </form>
+                    
+                    <div class="auth-link">
+                        Already have an account? <a href="#" id="show-login-link">Log In</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Swap Modal -->
+        <div class="modal" id="swap-modal">
+            <div class="modal-content swap-modal-large">
+                <span class="close-modal">&times;</span>
+                <h2 id="swap-modal-title">Skill Swap Request</h2>
+                <div id="swap-modal-content">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Modal -->
+        <div class="modal" id="rating-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 id="rating-modal-title">Rate Your Swap Experience</h2>
+                <div id="rating-modal-content">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Password Modal -->
+        <div class="modal" id="forgot-password-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h2>Reset Your Password</h2>
+                        <p>Enter your email address and we'll send you a reset link</p>
+                    </div>
+            
+                    <form id="forgot-password-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="forgot-email">Email Address</label>
+                            <input type="email" id="forgot-email" placeholder="Enter your email" required>
+                            <div id="forgot-email-error" class="error-message">Please enter a valid email</div>
+                        </div>
+                
+                        <button type="submit" class="auth-btn">Send Reset Link</button>
+                    </form>
+            
+                    <div class="auth-link">
+                        Remember your password? <a href="#" id="back-to-login-link">Back to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div class="modal" id="edit-profile-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h2>Edit Profile</h2>
+                        <p>Update your profile information</p>
+                    </div>
+            
+                    <form id="edit-profile-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="edit-name">Full Name</label>
+                            <input type="text" id="edit-name" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-email">Email Address</label>
+                            <input type="email" id="edit-email" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-location">Location</label>
+                            <input type="text" id="edit-location" placeholder="Enter your location">
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="edit-bio">Bio (Optional)</label>
+                            <textarea id="edit-bio" placeholder="Tell us about yourself..." rows="4"></textarea>
+                        </div>
+                
+                        <button type="submit" class="auth-btn">Save Changes</button>
+                    </form>
+            
+                    <div class="auth-link">
+                        <a href="#" id="cancel-edit-profile">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>SkillSwap</h3>
+                    <p>Connecting people through skill exchange since 2023.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#">support@skillswap.com</a></li>
+                        <li><a href="#">Report an Issue</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 SkillSwap. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
     </div>
-  </div>
 
-  <div id="add-expense-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add New Expense</h2>
-      <p>Add a new expense to the group. The amount will be split equally among all members.</p>
-      <form id="add-expense-form">
-        <div class="form-control">
-          <label for="expense-description">Description</label>
-          <input type="text" id="expense-description" placeholder="What was this expense for?" required>
-        </div>
-        <div class="form-control">
-          <label for="expense-amount">Amount</label>
-          <input type="number" id="expense-amount" step="0.01" placeholder="How much was spent?" required>
-        </div>
-        <div class="form-control">
-          <label for="expense-paid-by">Paid By</label>
-          <input type="text" id="expense-paid-by" placeholder="Who paid for this?" required>
-          <small>Enter the username of the group member who paid</small>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Expense</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
